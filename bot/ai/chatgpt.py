@@ -108,4 +108,6 @@ def _calc_n_input(name: str, n_output: int) -> int:
     n_total = 4096  # max 4096 tokens total by default
     if name == "gpt-4":
         n_total = 8192
+    elif name == "gpt-3.5-turbo-16k":
+        n_total = 16385
     return n_total - n_output
