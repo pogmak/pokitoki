@@ -25,7 +25,7 @@ from bot.models import UserData
 
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logging.getLogger("openai").setLevel(logging.WARNING)
@@ -181,8 +181,16 @@ async def _ask_question(
         user.messages.clear()
         history = []
 
+    if message.chat.type == Chat.PRIVATE:
+        prompt = config.openai.prompts['private_prompt']
+        logger.info(f"Using private prompt")
+    else:
+        chat_id = message.chat.id
+        prompt = config.openai.prompts[str(chat_id)]
+        logger.info(f"Getting prompt from chat {chat_id}")
+    logger.info(f"Using prompt: {prompt}")
     start = time.perf_counter_ns()
-    answer = await asker.ask(question, history)
+    answer = await asker.ask(question, history, prompt)
     elapsed = int((time.perf_counter_ns() - start) / 1e6)
 
     logger.info(

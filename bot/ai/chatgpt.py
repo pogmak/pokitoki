@@ -18,11 +18,11 @@ class Model:
         """Creates a wrapper for a given OpenAI large language model."""
         self.name = name
 
-    async def ask(self, question: str, history: list[tuple[str, str]]) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
         """Asks the language model a question and returns an answer."""
         # maximum number of input tokens
         n_input = _calc_n_input(self.name, n_output=config.openai.params["max_tokens"])
-        messages = self._generate_messages(question, history)
+        messages = self._generate_messages(question, history, prompt)
         messages = shorten(messages, length=n_input)
         params = self._prepare_params()
         resp = await openai.ChatCompletion.acreate(
@@ -48,9 +48,9 @@ class Model:
             params["deployment_id"] = config.openai.azure["deployment"]
         return params
 
-    def _generate_messages(self, question: str, history: list[tuple[str, str]]) -> list[dict]:
+    def _generate_messages(self, question: str, history: list[tuple[str, str]], prompt: str) -> list[dict]:
         """Builds message history to provide context for the language model."""
-        messages = [{"role": "system", "content": config.openai.prompt}]
+        messages = [{"role": "system", "content": prompt}]
         for prev_question, prev_answer in history:
             messages.append({"role": "user", "content": prev_question})
             messages.append({"role": "assistant", "content": prev_answer})

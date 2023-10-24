@@ -6,7 +6,6 @@ and responds to the user with answers provided by the AI.
 import io
 import re
 import textwrap
-from typing import Optional
 
 from telegram import Chat, Message
 from telegram.constants import MessageLimit, ParseMode
@@ -20,7 +19,7 @@ from bot import markdown
 class Asker:
     """Asks AI questions and responds with answers."""
 
-    async def ask(self, question: str, history: list[tuple[str, str]]) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
         """Asks AI a question."""
         pass
 
@@ -34,9 +33,9 @@ class TextAsker(Asker):
 
     model = ai.chatgpt.Model(config.openai.model)
 
-    async def ask(self, question: str, history: list[tuple[str, str]]) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
         """Asks AI a question."""
-        return await self.model.ask(question, history)
+        return await self.model.ask(question, history, prompt)
 
     async def reply(self, message: Message, context: CallbackContext, answer: str) -> None:
         """Replies with an answer from AI."""

@@ -19,12 +19,11 @@ class Telegram:
 class OpenAI:
     api_key: str
     model: str
-    prompt: str
+    prompts: dict
     params: dict
     azure: Optional[dict] = None
 
     default_model = "gpt-3.5-turbo"
-    default_prompt = "Your primary goal is to answer my questions. This may involve writing code or providing helpful information. Be detailed and thorough in your responses."
     default_params = {
         "temperature": 0.7,
         "presence_penalty": 0,
@@ -33,11 +32,11 @@ class OpenAI:
     }
 
     def __init__(
-        self, api_key: str, model: str, prompt: str, params: dict, azure: Optional[dict] = None
+        self, api_key: str, model: str, prompts: dict, params: dict, azure: Optional[dict] = None
     ) -> None:
         self.api_key = api_key
         self.model = model or self.default_model
-        self.prompt = prompt or self.default_prompt
+        self.prompts = prompts
         self.params = self.default_params.copy()
         self.params.update(params)
         self.azure = azure
@@ -107,7 +106,7 @@ class Config:
         self.openai = OpenAI(
             api_key=src["openai"]["api_key"],
             model=src["openai"].get("model"),
-            prompt=src["openai"].get("prompt"),
+            prompts=src["openai"].get("prompts") or {},
             params=src["openai"].get("params") or {},
             azure=src["openai"].get("azure"),
         )
