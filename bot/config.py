@@ -126,6 +126,8 @@ class Config:
         # Custom AI commands (additional prompts).
         self.shortcuts = src.get("shortcuts") or {}
 
+        self.askers_map = src.get("askers_map") or {}
+
     def as_dict(self) -> dict:
         """Converts the config into a dictionary."""
         return {

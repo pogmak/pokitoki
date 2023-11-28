@@ -30,7 +30,10 @@ openai:
     model: "gpt-3.5-turbo"
 
     # Model prompt.
-    prompt: "Your primary goal is to answer my questions. This may involve writing code or providing helpful information. Be detailed and thorough in your responses."
+    prompts:
+        'private_prompt': example text
+        '-1001397127685': example text 1
+        '-1001148095520': example text 2
 
     # Model parameters.
     # See https://platform.openai.com/docs/api-reference/chat/create for description.
@@ -82,3 +85,6 @@ shortcuts:
     summarize: "Explain the following text in simple terms. Use no more than two paragraphs."
 
     translate: "Translate the following text into English."
+
+askers_map:
+    'pogmak': Makar Pogorelov

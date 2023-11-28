@@ -170,6 +170,11 @@ async def _ask_question(
     question = await fetcher.substitute_urls(question)
     logger.debug(f"Prepared question: {question}")
 
+    logger.info(f"Add asker`s to the question")
+    asker_name = config.askers_map.get(message.from_user.username, message.from_user.full_name)
+    question = f"Это я, {asker_name}, спрашиваю тебя: {question}"
+    logger.info(f"Question with the asker`s info: {question}")
+
     user = UserData(context.user_data)
     if is_follow_up:
         # this is a follow-up question,
