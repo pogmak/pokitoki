@@ -2,7 +2,7 @@
 Asker is an abstraction that sends questions to the AI
 and responds to the user with answers provided by the AI.
 """
-
+import base64
 import io
 import re
 import textwrap
@@ -77,7 +77,8 @@ class ImagineAsker(Asker):
 
     async def reply(self, message: Message, context: CallbackContext, answer: str) -> None:
         """Replies with an answer from AI."""
-        await message.reply_photo(answer, caption=self.caption)
+        photo_bytes_io = io.BytesIO(base64.decodebytes(bytes(answer, "utf-8")))
+        await message.reply_photo(photo=photo_bytes_io, caption=self.caption)
 
     def _extract_size(self, question: str) -> str:
         match = self.size_re.search(question)

@@ -128,6 +128,8 @@ class Config:
 
         self.askers_map = src.get("askers_map") or {}
 
+        self.kandinsky = src.get("kandinsky") or {}
+
     def as_dict(self) -> dict:
         """Converts the config into a dictionary."""
         return {
@@ -138,6 +140,8 @@ class Config:
             "imagine": dataclasses.asdict(self.imagine),
             "persistence_path": self.persistence_path,
             "shortcuts": self.shortcuts,
+            "askers_map": self.askers_map,
+            "kandinsky": self.kandinsky,
         }
 
 

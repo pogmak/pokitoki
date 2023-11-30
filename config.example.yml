@@ -88,3 +88,7 @@ shortcuts:
 
 askers_map:
     'pogmak': Makar Pogorelov
+
+kandinsky:
+    api_key: "example_key"
+    secret_key: "secret_example_key"

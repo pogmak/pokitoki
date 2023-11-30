@@ -17,6 +17,7 @@ from bot import askers
 from bot import commands
 from bot import questions
 from bot import models
+from bot.askers import ImagineAsker
 from bot.config import config
 from bot.fetcher import Fetcher
 from bot.filters import Filters
@@ -172,8 +173,9 @@ async def _ask_question(
 
     logger.info(f"Add asker`s to the question")
     asker_name = config.askers_map.get(message.from_user.username, message.from_user.full_name)
-    question = f"Это я, {asker_name}, спрашиваю тебя: {question}"
-    logger.info(f"Question with the asker`s info: {question}")
+    if not isinstance(asker, ImagineAsker):
+        question = f"Это я, {asker_name}, спрашиваю тебя: {question}"
+        logger.info(f"Question with the asker`s info: {question}")
 
     user = UserData(context.user_data)
     if is_follow_up:
