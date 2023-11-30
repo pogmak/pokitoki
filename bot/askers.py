@@ -69,7 +69,7 @@ class ImagineAsker(Asker):
     def __init__(self) -> None:
         self.caption = ""
 
-    async def ask(self, question: str, history: list[tuple[str, str]]) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
         """Asks AI a question."""
         size = self._extract_size(question)
         self.caption = self._extract_caption(question)
