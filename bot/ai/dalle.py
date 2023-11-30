@@ -54,9 +54,11 @@ class Text2ImageAPI:
             logger.info(f"Checking status of generation attempt is {10 - attempts + 1}")
             response = requests.get(self.URL + 'key/api/v1/text2image/status/' + request_id, headers=self.AUTH_HEADERS)
             data = response.json()
-            logger.info(f"Status: {data}")
+            logger.info(f"Censored: {data['censored']}")
             if data['status'] == 'DONE':
                 return data['images'][0]
+            elif data['status'] == 'FAIL':
+                raise Exception(f"Generation error: {data['errorDescription']}")
 
             attempts -= 1
             time.sleep(delay)
