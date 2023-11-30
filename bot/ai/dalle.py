@@ -28,7 +28,7 @@ class Text2ImageAPI:
         data = response.json()
         return data[0]['id']
 
-    def generate(self, prompt, model, images=1, width=1024, height=1024):
+    def generate(self, prompt, model, style, images=1, width=1024, height=1024):
         logger.info(f"Generating image")
         params = {
             "type": "GENERATE",
@@ -37,7 +37,8 @@ class Text2ImageAPI:
             "height": height,
             "generateParams": {
                 "query": f"{prompt}"
-            }
+            },
+            "style": style,
         }
 
         data = {
@@ -53,6 +54,7 @@ class Text2ImageAPI:
             logger.info(f"Checking status of generation attempt is {10 - attempts + 1}")
             response = requests.get(self.URL + 'key/api/v1/text2image/status/' + request_id, headers=self.AUTH_HEADERS)
             data = response.json()
+            logger.info(f"Status: {data}")
             if data['status'] == 'DONE':
                 return data['images'][0]
 
@@ -63,13 +65,13 @@ class Text2ImageAPI:
 class Model:
     """OpenAI DALL-E wrapper."""
 
-    async def imagine(self, prompt: str, size: str) -> str:
+    async def imagine(self, prompt: str, style: str) -> str:
         """Generates an image of the specified size according to the description."""
         api = Text2ImageAPI('https://api-key.fusionbrain.ai/',
                             api_key=kandinsky_api_key,
                             secret_key=kandinsky_secret_key)
         model_id = api.get_model()
-        uuid = api.generate(prompt, model_id)
+        uuid = api.generate(prompt, model_id, style=style)
         image = api.check_generation(uuid)
 
         if len(image) == 0:

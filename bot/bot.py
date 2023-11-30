@@ -81,6 +81,9 @@ def add_handlers(application: Application):
     application.add_handler(
         CommandHandler("imagine", commands.Imagine(reply_to), filters=filters.users_or_chats)
     )
+    application.add_handler(
+        CommandHandler("imagine_styles", commands.ImagineStyles(), filters=filters.users_or_chats)
+    )
 
     # non-command handler: the default action is to reply to a message
     application.add_handler(MessageHandler(filters.messages, commands.Message(reply_to)))

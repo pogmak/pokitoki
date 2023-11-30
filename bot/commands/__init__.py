@@ -7,3 +7,4 @@ from .message import MessageCommand as Message
 from .retry import RetryCommand as Retry
 from .start import StartCommand as Start
 from .version import VersionCommand as Version
+from .imagine_styles import ImagineStylesCommand as ImagineStyles

@@ -4,6 +4,7 @@ and responds to the user with answers provided by the AI.
 """
 import base64
 import io
+import logging
 import re
 import textwrap
 
@@ -14,6 +15,8 @@ from telegram.ext import CallbackContext
 from bot import ai
 from bot.config import config
 from bot import markdown
+
+logger = logging.getLogger(__name__)
 
 
 class Asker:
@@ -46,7 +49,7 @@ class TextAsker(Asker):
 
         doc = io.StringIO(answer)
         caption = (
-            textwrap.shorten(answer, width=40, placeholder="...") + " (see attachment for the rest)"
+                textwrap.shorten(answer, width=40, placeholder="...") + " (see attachment for the rest)"
         )
         reply_to_message_id = message.id if message.chat.type != Chat.PRIVATE else None
         await context.bot.send_document(
@@ -73,7 +76,13 @@ class ImagineAsker(Asker):
         """Asks AI a question."""
         size = self._extract_size(question)
         self.caption = self._extract_caption(question)
-        return await self.model.imagine(prompt=self.caption, size=size)
+        style = re.search(r"Style:(.*)\s", self.caption)
+        try:
+            style = style.group(1).strip()
+        except:
+            logger.info(f"Style didn't found. Use default")
+            style = 'DEFAULT'
+        return await self.model.imagine(prompt=self.caption, style=style)
 
     async def reply(self, message: Message, context: CallbackContext, answer: str) -> None:
         """Replies with an answer from AI."""
