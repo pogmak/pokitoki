@@ -1,6 +1,7 @@
 """Telegram chat bot built using the language model from OpenAI."""
 
 import logging
+import re
 import sys
 import time
 
@@ -190,8 +191,12 @@ async def _ask_question(
         # so the bot should forget the previous history
         user.messages.clear()
         history = []
-
-    if message.chat.type == Chat.PRIVATE:
+    own_prompt = re.search(r'Prompt:"(.*)"', question)
+    if own_prompt:
+        own_prompt = own_prompt.group(1)
+        prompt = own_prompt
+        logger.info(f"Using own prompt from user message. Prompt: {own_prompt}")
+    elif message.chat.type == Chat.PRIVATE:
         prompt = config.openai.prompts['private_prompt']
         logger.info(f"Using private prompt")
     else:
