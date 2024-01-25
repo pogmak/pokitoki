@@ -102,6 +102,8 @@ class Config:
             chat_ids=src["telegram"].get("chat_ids") or [],
         )
 
+        self.gigachat = src['gigachat']
+
         # OpenAI settings.
         self.openai = OpenAI(
             api_key=src["openai"]["api_key"],

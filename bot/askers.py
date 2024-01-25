@@ -34,7 +34,7 @@ class Asker:
 class TextAsker(Asker):
     """Works with chat completion AI."""
 
-    model = ai.chatgpt.Model(config.openai.model)
+    model = ai.gigachat.Model(config.openai.model)
 
     async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
         """Asks AI a question."""

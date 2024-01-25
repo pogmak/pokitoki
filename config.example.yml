@@ -20,6 +20,9 @@ telegram:
     # If empty, the bot will only be available to `telegram.usernames`.
     chat_ids: []
 
+gigachat:
+    api_key: ""
+
 # OpenAI settings.
 openai:
     # OpenAI API key.
