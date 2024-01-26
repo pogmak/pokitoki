@@ -106,7 +106,7 @@ class Config:
 
         # OpenAI settings.
         self.openai = OpenAI(
-            api_key=src["openai"]["api_key"],
+            api_key=src["openai"].get("api_key"),
             model=src["openai"].get("model"),
             prompts=src["openai"].get("prompts") or {},
             params=src["openai"].get("params") or {},
