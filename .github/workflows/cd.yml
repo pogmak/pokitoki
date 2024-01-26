@@ -15,3 +15,10 @@ jobs:
         host: 80.66.64.203
         password: ${{ secrets.SSH_PASSWORD }}
         script: 'cd /root/pokitoki/ && chmod +x ./server_deploy.sh && ./server_deploy.sh'
+    - name: Deploy to server USA
+      uses: appleboy/ssh-action@master
+      with:
+        username: root
+        host: 109.172.84.41
+        password: ${{ secrets.SSH_USA_PASSWORD }}
+        script: 'cd /root/pokitoki/ && chmod +x ./server_deploy.sh && ./server_deploy.sh'
