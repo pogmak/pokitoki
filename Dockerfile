@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM python:3.12.3-alpine
 
 ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 ARG PIP_NO_CACHE_DIR=1
