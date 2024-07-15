@@ -8,6 +8,7 @@ from bot.config import config
 logger = logging.getLogger(__name__)
 
 openai.api_key = config.openai.api_key
+openai.api_base = config.openai.api_base
 encoding = tiktoken.get_encoding("cl100k_base")
 
 
