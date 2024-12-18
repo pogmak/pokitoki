@@ -26,7 +26,8 @@ class Model:
         # maximum number of input tokens
         n_input = _calc_n_input(self.name, n_output=config.openai.params["max_tokens"])
         messages = await self._generate_messages(question, history, prompt, image_bytearray)
-        messages = shorten(messages, length=n_input)
+        if not image_bytearray:
+            messages = shorten(messages, length=n_input)
         params = self._prepare_params()
         resp = await openai.ChatCompletion.acreate(
             model=self.name,
