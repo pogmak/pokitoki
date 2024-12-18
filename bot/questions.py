@@ -8,6 +8,12 @@ from bot import shortcuts
 def extract_private(message: Message, context: CallbackContext) -> str:
     """Extracts a question from a message in a private chat."""
     # allow any messages in a private chat
+    if message.photo:
+        question = message.caption
+        if not question:
+            question = f"Что на этой картинке?"
+        return question
+
     question = message.text
     if message.reply_to_message:
         # it's a follow-up question
@@ -17,6 +23,13 @@ def extract_private(message: Message, context: CallbackContext) -> str:
 
 def extract_group(message: Message, context: CallbackContext) -> tuple[str, Message]:
     """Extracts a question from a message in a group chat."""
+
+    if message.photo:
+        question = message.caption
+        if not question:
+            question = f"Что на этой картинке?"
+        return question
+
     if (
         message.reply_to_message
         and message.reply_to_message.from_user.username == context.bot.username
