@@ -32,7 +32,7 @@ class OpenAI:
     }
 
     def __init__(
-        self, api_key: str, model: str, prompts: dict, params: dict, api_base, azure: Optional[dict] = None
+        self, api_key: str, model: str, prompts: dict, params: dict, api_base, context_length, azure: Optional[dict] = None
     ) -> None:
         self.api_key = api_key
         self.api_base = api_base
@@ -41,6 +41,7 @@ class OpenAI:
         self.params = self.default_params.copy()
         self.params.update(params)
         self.azure = azure
+        self.context_length = context_length
 
 
 @dataclass
@@ -108,6 +109,7 @@ class Config:
         # OpenAI settings.
         self.openai = OpenAI(
             api_key=src["openai"].get("api_key"),
+            context_length=src["openai"].get("context_length"),
             model=src["openai"].get("model"),
             prompts=src["openai"].get("prompts") or {},
             params=src["openai"].get("params") or {},

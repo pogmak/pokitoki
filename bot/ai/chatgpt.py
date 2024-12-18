@@ -106,7 +106,7 @@ def _calc_n_input(name: str, n_output: int) -> int:
     """
     # OpenAI counts length in tokens, not charactes.
     # We need to leave some tokens reserved for the output.
-    n_total = 4096  # max 4096 tokens total by default
+    n_total = config.openai.context_length
     if name == "gpt-4":
         n_total = 8192
     elif name == "gpt-3.5-turbo-16k":

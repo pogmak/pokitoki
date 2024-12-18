@@ -19,6 +19,6 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         username: root
-        host: 147.45.124.41
-        password: ${{ secrets.SSH_USA_PASSWORD }}
+        host: 147.45.114.149
+        password: ${{ secrets.SSH_NID_PASSWORD }}
         script: 'cd /root/pokitoki/ && git stash && git pull -X theirs && chmod +x ./server_deploy.sh && ./server_deploy.sh'

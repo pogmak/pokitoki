@@ -30,6 +30,8 @@ openai:
 
     api_base: ""
 
+    context_length: 128000
+
     # OpenAI model name. One of the following:
     # gpt-3.5-turbo | gpt-4
     model: "gpt-3.5-turbo"
