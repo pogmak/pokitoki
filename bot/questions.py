@@ -66,8 +66,13 @@ def extract_group(message: Message, context: CallbackContext) -> tuple[str, Mess
 
     # the message is mentioning the bot,
     # so remove the mention to get the question
-    question = message.text[: mention.offset] + message.text[mention.offset + mention.length :]
-    question = question.strip()
+    if message.photo:
+        question = message.caption
+        if not question:
+            question = f"Что на этой картинке?"
+    else:
+        question = message.text[: mention.offset] + message.text[mention.offset + mention.length :]
+        question = question.strip()
 
     # messages in topics are technically replies to the 'topic created' message
     # so we should ignore such replies
@@ -84,10 +89,6 @@ def extract_group(message: Message, context: CallbackContext) -> tuple[str, Mess
                 question = f"Что на этой картинке?"
         return question, message.reply_to_message
 
-    if message.photo:
-        question = message.caption
-        if not question:
-            question = f"Что на этой картинке?"
     return question, message
 
 
