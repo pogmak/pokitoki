@@ -204,8 +204,14 @@ async def _ask_question(
         prompt = config.openai.prompts[str(chat_id)]
         logger.info(f"Getting prompt from chat {chat_id}")
     logger.info(f"Using prompt: {prompt}")
+
+    image_id = None
+    if message.photo:
+        image_id = message.photo[-1].file_id
+        logger.info(f"This message with photo. File id: {image_id}")
+
     start = time.perf_counter_ns()
-    answer = await asker.ask(question, history, prompt)
+    answer = await asker.ask(question, history, prompt, image_id)
     elapsed = int((time.perf_counter_ns() - start) / 1e6)
 
     logger.info(

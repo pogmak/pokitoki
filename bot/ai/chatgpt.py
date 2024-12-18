@@ -1,8 +1,10 @@
 """ChatGPT (GPT-3.5+) language model from OpenAI."""
-
+import base64
 import logging
 import openai
 import tiktoken
+
+import bot
 from bot.config import config
 
 logger = logging.getLogger(__name__)
@@ -19,11 +21,11 @@ class Model:
         """Creates a wrapper for a given OpenAI large language model."""
         self.name = name
 
-    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_id: str = None) -> str:
         """Asks the language model a question and returns an answer."""
         # maximum number of input tokens
         n_input = _calc_n_input(self.name, n_output=config.openai.params["max_tokens"])
-        messages = self._generate_messages(question, history, prompt)
+        messages = await self._generate_messages(question, history, prompt, image_id)
         messages = shorten(messages, length=n_input)
         params = self._prepare_params()
         resp = await openai.ChatCompletion.acreate(
@@ -49,12 +51,33 @@ class Model:
             params["deployment_id"] = config.openai.azure["deployment"]
         return params
 
-    def _generate_messages(self, question: str, history: list[tuple[str, str]], prompt: str) -> list[dict]:
+    async def _generate_messages(self, question: str,
+                           history: list[tuple[str, str]],
+                           prompt: str,
+                           image_id: str = None) -> list[dict]:
         """Builds message history to provide context for the language model."""
         messages = [{"role": "system", "content": prompt}]
         for prev_question, prev_answer in history:
             messages.append({"role": "user", "content": prev_question})
             messages.append({"role": "assistant", "content": prev_answer})
+
+        if image_id:
+            new_file = await bot.get_file(image_id)
+            image_bytearray = await new_file.download_as_bytearray()
+            image_base64 = base64.b64encode(image_bytearray).decode('utf-8')
+            question = [
+                {
+                    "type": "text",
+                    "text": question
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{image_base64}"
+                    }
+                }
+            ]
+
         messages.append({"role": "user", "content": question})
         return messages
 
