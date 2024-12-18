@@ -33,7 +33,7 @@ class Filters:
 
         self.users_or_chats = self.users | self.chats
         self.admins_private = self.admins & filters.ChatType.PRIVATE
-        self.messages = filters.TEXT & ~filters.COMMAND & self.users_or_chats & filters.PHOTO
+        self.messages = (filters.TEXT | filters.PHOTO) & ~filters.COMMAND & self.users_or_chats
 
     def reload(self) -> None:
         """Reloads users and chats from config."""
