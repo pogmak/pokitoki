@@ -207,7 +207,7 @@ async def _ask_question(
 
     image_bytearray = None
     if message.photo:
-        image_file = message.effective_attachment[-1].get_file()
+        image_file = await message.effective_attachment[-1].get_file()
         image_bytearray = await image_file.download_as_bytearray()
         logger.info(f"This message with photo")
 
