@@ -4,6 +4,7 @@ import logging
 import re
 import sys
 import time
+import traceback
 
 from telegram import Chat, Message
 from telegram.ext import (
@@ -159,7 +160,7 @@ async def reply_to(message: Message, context: CallbackContext, question: str) ->
 
     except Exception as exc:
         class_name = f"{exc.__class__.__module__}.{exc.__class__.__qualname__}"
-        error_text = f"Failed to answer. Reason: {class_name}: {exc}"
+        error_text = f"Failed to answer. Reason: {class_name}: {exc} {traceback.format_exc()}"
         logger.error(error_text)
         await message.reply_text(error_text)
 
