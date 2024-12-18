@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class Asker:
     """Asks AI questions and responds with answers."""
 
-    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_id: str = None) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_bytearray = None) -> str:
         """Asks AI a question."""
         pass
 
@@ -39,9 +39,9 @@ class TextAsker(Asker):
     else:
         model = ai.gigachat.Model(config.openai.model)
 
-    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_id: str = None) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_bytearray=None) -> str:
         """Asks AI a question."""
-        return await self.model.ask(question, history, prompt, image_id)
+        return await self.model.ask(question, history, prompt, image_bytearray)
 
     async def reply(self, message: Message, context: CallbackContext, answer: str) -> None:
         """Replies with an answer from AI."""
@@ -75,7 +75,7 @@ class ImagineAsker(Asker):
     def __init__(self) -> None:
         self.caption = ""
 
-    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_id: str = None) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_bytearray=None) -> str:
         """Asks AI a question."""
         size = self._extract_size(question)
         self.caption = self._extract_caption(question)

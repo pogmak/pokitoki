@@ -21,11 +21,11 @@ class Model:
         """Creates a wrapper for a given OpenAI large language model."""
         self.name = name
 
-    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_id: str = None) -> str:
+    async def ask(self, question: str, history: list[tuple[str, str]], prompt: str, image_bytearray=None) -> str:
         """Asks the language model a question and returns an answer."""
         # maximum number of input tokens
         n_input = _calc_n_input(self.name, n_output=config.openai.params["max_tokens"])
-        messages = await self._generate_messages(question, history, prompt, image_id)
+        messages = await self._generate_messages(question, history, prompt, image_bytearray)
         messages = shorten(messages, length=n_input)
         params = self._prepare_params()
         resp = await openai.ChatCompletion.acreate(
@@ -54,16 +54,14 @@ class Model:
     async def _generate_messages(self, question: str,
                            history: list[tuple[str, str]],
                            prompt: str,
-                           image_id: str = None) -> list[dict]:
+                           image_bytearray=None) -> list[dict]:
         """Builds message history to provide context for the language model."""
         messages = [{"role": "system", "content": prompt}]
         for prev_question, prev_answer in history:
             messages.append({"role": "user", "content": prev_question})
             messages.append({"role": "assistant", "content": prev_answer})
 
-        if image_id:
-            new_file = await bot.get_file(image_id)
-            image_bytearray = await new_file.download_as_bytearray()
+        if image_bytearray:
             image_base64 = base64.b64encode(image_bytearray).decode('utf-8')
             question = [
                 {

@@ -205,13 +205,14 @@ async def _ask_question(
         logger.info(f"Getting prompt from chat {chat_id}")
     logger.info(f"Using prompt: {prompt}")
 
-    image_id = None
+    image_bytearray = None
     if message.photo:
-        image_id = message.photo[-1].file_id
-        logger.info(f"This message with photo. File id: {image_id}")
+        image_file = message.effective_attachment[-1].get_file()
+        image_bytearray = await image_file.download_as_bytearray()
+        logger.info(f"This message with photo")
 
     start = time.perf_counter_ns()
-    answer = await asker.ask(question, history, prompt, image_id)
+    answer = await asker.ask(question, history, prompt, image_bytearray)
     elapsed = int((time.perf_counter_ns() - start) / 1e6)
 
     logger.info(
