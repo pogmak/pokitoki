@@ -24,18 +24,16 @@ def extract_private(message: Message, context: CallbackContext) -> str:
 def extract_group(message: Message, context: CallbackContext) -> tuple[str, Message]:
     """Extracts a question from a message in a group chat."""
 
-    if message.photo:
-        question = message.caption
-        if not question:
-            question = f"Что на этой картинке?"
-        return question
-
     if (
         message.reply_to_message
         and message.reply_to_message.from_user.username == context.bot.username
     ):
         # treat a reply to the bot as a follow-up question
         question = f"+ {message.text}"
+        if message.photo:
+            question = message.caption
+            if not question:
+                question = f"Что на этой картинке?"
         return question, message
 
     mention = (
@@ -67,8 +65,16 @@ def extract_group(message: Message, context: CallbackContext) -> tuple[str, Mess
             if question
             else message.reply_to_message.text
         )
+        if message.photo:
+            question = message.caption
+            if not question:
+                question = f"Что на этой картинке?"
         return question, message.reply_to_message
 
+    if message.photo:
+        question = message.caption
+        if not question:
+            question = f"Что на этой картинке?"
     return question, message
 
 
