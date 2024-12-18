@@ -46,7 +46,11 @@ def extract_group(message: Message, context: CallbackContext) -> tuple[str, Mess
         # so ignore it unless it's mentioning the bot
         return "", message
 
-    mention_text = message.text[mention.offset : mention.offset + mention.length]
+    if message.photo:
+        mention_text = message.caption
+    else:
+        mention_text = message.text
+    mention_text = mention_text[mention.offset : mention.offset + mention.length]
     if mention_text.lower() != context.bot.name.lower():
         # the message mentions someone else
         return "", message
