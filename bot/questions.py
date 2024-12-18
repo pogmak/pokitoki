@@ -37,12 +37,18 @@ def extract_group(message: Message, context: CallbackContext) -> tuple[str, Mess
             if not question:
                 question = f"Что на этой картинке?"
         return question, message
-
-    mention = (
-        message.entities[0]
-        if message.entities and message.entities[0].type == MessageEntity.MENTION
-        else None
-    )
+    if message.photo:
+        mention = (
+            message.caption_entities[0]
+            if message.caption_entities and message.caption_entities[0].type == MessageEntity.MENTION
+            else None
+        )
+    else:
+        mention = (
+            message.entities[0]
+            if message.entities and message.entities[0].type == MessageEntity.MENTION
+            else None
+        )
     if not mention:
         # the message is not a reply to the bot,
         # so ignore it unless it's mentioning the bot
